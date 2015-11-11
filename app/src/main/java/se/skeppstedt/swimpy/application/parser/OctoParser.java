@@ -88,7 +88,7 @@ public class OctoParser {
 			String date = extractDate(element);
 			Duration time = extractTime(element);
 			Event event = Event.fromCode(extractLinkParameter(element, "event"));
-			PersonalBest personalBest = new PersonalBest(event, time, competition, swimmer);
+			PersonalBest personalBest = new PersonalBest(event, time, competition, date, swimmer);
 			swimmer.personalBests.add(personalBest);
 		}
         Log.d("OctoParser","Extracted " + swimmer.personalBests.size() + " personal bests");

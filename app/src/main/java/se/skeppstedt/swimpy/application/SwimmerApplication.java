@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import se.skeppstedt.swimpy.MainActivity;
+import se.skeppstedt.swimpy.util.ActivityLifecycleCallbacksAdapter;
 
 /**
  * Created by niske on 2015-11-09.
@@ -30,60 +31,6 @@ public class SwimmerApplication extends Application{
             }
         }
         return null;
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-        FileWriter fileWriter = null;
-        try {
-            if(!swimmers.isEmpty()) {
-                fileWriter = new FileWriter(new File(getFilesDir(), "swimmers.dat"));
-                //Write a new student object list to the CSV file
-                boolean comma = false;
-                for (Swimmer student : swimmers) {
-                    if (comma) {
-                        fileWriter.append(",");
-                    }
-                    fileWriter.append(String.valueOf(student.octoId));
-                    comma = true;
-                }
-                System.out.println("CSV file was created successfully !!!");
-            }
-        } catch (Exception e) {
-            System.out.println("Error in CsvFileWriter !!!");
-            e.printStackTrace();
-        } finally {
-            try {
-                fileWriter.flush();
-                fileWriter.close();
-            } catch (IOException e) {
-                System.out.println("Error while flushing/closing fileWriter !!!");
-                e.printStackTrace();
-            }
-        }
-    }
-
-    void initialDummyWrite() {
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter(new File(getFilesDir(),"swimmers.dat"));
-            //Write a new student object list to the CSV file
-            fileWriter.append("297358,301255");
-            System.out.println("CSV file was created successfully !!!");
-        } catch (Exception e) {
-            System.out.println("Error in CsvFileWriter !!!");
-            e.printStackTrace();
-        } finally {
-            try {
-                fileWriter.flush();
-                fileWriter.close();
-            } catch (IOException e) {
-                System.out.println("Error while flushing/closing fileWriter !!!");
-                e.printStackTrace();
-            }
-        }
-
     }
 
     @Override
@@ -111,44 +58,35 @@ public class SwimmerApplication extends Application{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                System.out.println("Activity created");
-            }
-
-            @Override
-            public void onActivityStarted(Activity activity) {
-                System.out.println("Activity created");
-            }
-
-            @Override
-            public void onActivityResumed(Activity activity) {
-                System.out.println("Activity created");
-            }
-
-            @Override
-            public void onActivityPaused(Activity activity) {
-                System.out.println("Activity created");
-            }
-
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacksAdapter() {
             @Override
             public void onActivityStopped(Activity activity) {
                 if(activity instanceof MainActivity) {
-                    boolean destroyed = activity.isDestroyed();
-                    boolean finishing = activity.isFinishing();
-                    onTerminate();
+                    FileWriter fileWriter = null;
+                    try {
+                        if(!swimmers.isEmpty()) {
+                            fileWriter = new FileWriter(new File(getFilesDir(), "swimmers.dat"));
+                            //Write a new student object list to the CSV file
+                            boolean comma = false;
+                            for (Swimmer student : swimmers) {
+                                if (comma) {
+                                    fileWriter.append(",");
+                                }
+                                fileWriter.append(String.valueOf(student.octoId));
+                                comma = true;
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            fileWriter.flush();
+                            fileWriter.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-                System.out.println("onActivitySaveInst");
-            }
-
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-                System.out.println("Activity destroyed");
             }
         });
     }

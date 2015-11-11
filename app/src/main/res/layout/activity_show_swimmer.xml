@@ -51,22 +51,18 @@
         </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Personbästa:"
-            android:id="@+id/textView2" />
+            android:id="@+id/textView2"
+            android:background="@drawable/header_selector"
+            android:gravity="center" />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ListView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/personalBestList" />
-        </LinearLayout>
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/personalBestList" />
 
     </LinearLayout>
 </RelativeLayout>

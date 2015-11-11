@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
             tableRow.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    System.out.println("Loooong click");
                     Intent intent=new Intent(MainActivity.this,ShowSwimmerActivity.class);
                     intent.putExtra("swimmerid", swimmer.octoId);
                     startActivity(intent);
@@ -59,20 +58,16 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View clickedTableRow) {
                     CheckBox checkBox = (CheckBox) clickedTableRow.findViewWithTag("checkBox");
-                    System.out.println("Clicked row setting checkbox to " + !checkBox.isChecked());
                     if (checkBox != null) {
                         checkBox.setChecked(!checkBox.isChecked());
                     }
                     ViewParent table = clickedTableRow.getParent();
                     int tableRowCount = ((ViewGroup) table).getChildCount();
-                    System.out.println("Clicked table with " + tableRowCount + " children");
                     for(int i = 0; i < tableRowCount; ++i) {
                         TableRow tableRow = (TableRow)((ViewGroup) table).getChildAt(i);
-                        System.out.println("Working tablerow " + tableRow);
                         checkBox = (CheckBox) tableRow.findViewWithTag("checkBox");
                         if (checkBox != null) {
                             if(checkBox.getVisibility() == View.INVISIBLE) {
-                                System.out.println("Setting checkbox GONE");
                                 checkBox.setVisibility(View.VISIBLE);
                             }
                         }

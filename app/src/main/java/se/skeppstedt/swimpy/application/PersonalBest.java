@@ -14,12 +14,14 @@ public class PersonalBest {
     public String competition;
     public Duration time;
     public Swimmer swimmer;
+    public String date;
 
-    public PersonalBest(Event event, Duration time, String competition, Swimmer swimmer) {
+    public PersonalBest(Event event, Duration time, String competition, String date, Swimmer swimmer) {
         this.event = event;
         this.time = time;
         this.competition = competition;
         this.swimmer = swimmer;
+        this.date = date;
     }
 
     @Override
