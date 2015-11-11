@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import se.skeppstedt.swimpy.application.enumerations.Event;
+
 /**
  * Created by niske on 2015-11-09.
  */
@@ -48,5 +50,19 @@ public class Swimmer {
         this.yearOfBirth = yearOfBirth;
         this.octoId = octoId;
         this.club = club;
+    }
+
+    public PersonalBest getPersonalBest(Event event) {
+        for (PersonalBest personalBest : personalBests) {
+            if(personalBest.event.equals(event)) {
+                return personalBest;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

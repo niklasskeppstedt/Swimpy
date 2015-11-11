@@ -31,6 +31,8 @@
         </activity>
         <activity android:name=".ShowSwimmerActivity" >
         </activity>
+        <activity android:name=".ShowBestMedleyTeams50Activity" >
+        </activity>
     </application>
 
 </manifest>

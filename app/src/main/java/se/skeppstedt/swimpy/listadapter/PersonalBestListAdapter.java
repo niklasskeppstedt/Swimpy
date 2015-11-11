@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -13,7 +12,7 @@ import java.util.List;
 
 import se.skeppstedt.swimpy.R;
 import se.skeppstedt.swimpy.application.PersonalBest;
-import se.skeppstedt.swimpy.application.Swimmer;
+import se.skeppstedt.swimpy.util.DurationUtil;
 
 /**
  * Created by niske on 2015-11-11.
@@ -49,7 +48,7 @@ public class PersonalBestListAdapter extends BaseAdapter {
         if (v == null) {
             // Inflate the layout according to the view type
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.personalbest_advanced, parent, false);
+            v = inflater.inflate(R.layout.personalbest, parent, false);
         }
         //
         PersonalBest c = personalBestList.get(position);
@@ -66,7 +65,7 @@ public class PersonalBestListAdapter extends BaseAdapter {
         TextView competition = (TextView) v.findViewById(R.id.personalBestCompetition);
 
         event.setText(c.event.toString());
-        time.setText(c.getTimeString());
+        time.setText(DurationUtil.getTimeString(c.time));
         date.setText(c.date);
         competition.setText(c.competition);
         return v;

@@ -15,15 +15,22 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.view.ViewParent;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import se.skeppstedt.swimpy.application.Swimmer;
 import se.skeppstedt.swimpy.application.SwimmerApplication;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ArrayList<String> selectedSwimmers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +43,19 @@ public class MainActivity extends AppCompatActivity {
         for (final Swimmer swimmer : getSwimmerApplication().swimmers             ) {
             final TableRow tableRow = new TableRow(this);
 //        tableRow.setLayoutParams(new TableLayout.LayoutParams( TableLayout.LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-            CheckBox checkBox = new CheckBox(getBaseContext());
+            CheckBox checkBox = new CheckBox(this);
             checkBox.setTag("checkBox");
             checkBox.setVisibility(View.INVISIBLE);
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        selectedSwimmers.add(swimmer.octoId);
+                    } else {
+                        selectedSwimmers.remove(swimmer.octoId);
+                    }
+                }
+            });
             //checkBox.setBackgroundColor(Color.GREEN);
             tableRow.addView(checkBox);
             final TextView textview = new TextView(this);
@@ -48,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             tableRow.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Intent intent=new Intent(MainActivity.this,ShowSwimmerActivity.class);
+                    Intent intent = new Intent(MainActivity.this, ShowSwimmerActivity.class);
                     intent.putExtra("swimmerid", swimmer.octoId);
                     startActivity(intent);
                     return true;
@@ -63,16 +80,25 @@ public class MainActivity extends AppCompatActivity {
                     }
                     ViewParent table = clickedTableRow.getParent();
                     int tableRowCount = ((ViewGroup) table).getChildCount();
-                    for(int i = 0; i < tableRowCount; ++i) {
-                        TableRow tableRow = (TableRow)((ViewGroup) table).getChildAt(i);
+                    for (int i = 0; i < tableRowCount; ++i) {
+                        TableRow tableRow = (TableRow) ((ViewGroup) table).getChildAt(i);
                         checkBox = (CheckBox) tableRow.findViewWithTag("checkBox");
                         if (checkBox != null) {
-                            if(checkBox.getVisibility() == View.INVISIBLE) {
+                            if (checkBox.getVisibility() == View.INVISIBLE) {
                                 checkBox.setVisibility(View.VISIBLE);
                             }
                         }
                     }
 
+                }
+            });
+            Button medley50button = (Button) findViewById(R.id.medley50Button);
+            medley50button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, ShowBestMedleyTeams50Activity.class);
+                    intent.putStringArrayListExtra("selectedswimmers", selectedSwimmers);
+                    startActivity(intent);
                 }
             });
         }
