@@ -1,13 +1,27 @@
 package se.skeppstedt.swimpy;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.view.ViewManager;
+import android.view.ViewParent;
+import android.widget.CheckBox;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+
+import se.skeppstedt.swimpy.application.Swimmer;
+import se.skeppstedt.swimpy.application.SwimmerApplication;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,14 +32,67 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        TableLayout table =(TableLayout)findViewById(R.id.swimTable);
+        for (final Swimmer swimmer : getSwimmerApplication().swimmers             ) {
+            final TableRow tableRow = new TableRow(this);
+//        tableRow.setLayoutParams(new TableLayout.LayoutParams( TableLayout.LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+            CheckBox checkBox = new CheckBox(getBaseContext());
+            checkBox.setTag("checkBox");
+            checkBox.setVisibility(View.INVISIBLE);
+            //checkBox.setBackgroundColor(Color.GREEN);
+            tableRow.addView(checkBox);
+            final TextView textview = new TextView(this);
+            textview.setText(swimmer.name);
+            tableRow.addView(textview);
+            table.addView(tableRow);
+            tableRow.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    System.out.println("Loooong click");
+                    Intent intent=new Intent(MainActivity.this,ShowSwimmerActivity.class);
+                    intent.putExtra("swimmerid", swimmer.octoId);
+                    startActivity(intent);
+                    return true;
+                }
+            });
+            tableRow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View clickedTableRow) {
+                    CheckBox checkBox = (CheckBox) clickedTableRow.findViewWithTag("checkBox");
+                    System.out.println("Clicked row setting checkbox to " + !checkBox.isChecked());
+                    if (checkBox != null) {
+                        checkBox.setChecked(!checkBox.isChecked());
+                    }
+                    ViewParent table = clickedTableRow.getParent();
+                    int tableRowCount = ((ViewGroup) table).getChildCount();
+                    System.out.println("Clicked table with " + tableRowCount + " children");
+                    for(int i = 0; i < tableRowCount; ++i) {
+                        TableRow tableRow = (TableRow)((ViewGroup) table).getChildAt(i);
+                        System.out.println("Working tablerow " + tableRow);
+                        checkBox = (CheckBox) tableRow.findViewWithTag("checkBox");
+                        if (checkBox != null) {
+                            if(checkBox.getVisibility() == View.INVISIBLE) {
+                                System.out.println("Setting checkbox GONE");
+                                checkBox.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }
+
+                }
+            });
+        }
+
+    }
+
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    SwimmerApplication getSwimmerApplication() {
+        return (SwimmerApplication) getApplication();
     }
 
     @Override

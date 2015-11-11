@@ -68,6 +68,10 @@ public enum Event {
 		this.distance = distance;
 	}
 
+	public boolean isLongCourse() {
+		return this.name().contains("LC");
+	}
+
 	public static Event fromCode(String string) {
 		for (Event event : values()) {
 			if(event.code.equals(string)) {
@@ -80,6 +84,6 @@ public enum Event {
 	@Override
 	public String toString() {
 		String enumName = name();
-		return String.format("%4s %-10s (%3s)", distance, discipline, enumName.indexOf("LC") > 0 ? "50m" : "25m");
+		return String.format("%-18s", distance.toString() + " " + discipline + (enumName.indexOf("LC") > 0 ? "(50m)" : "(25m)"));
 	}
 }

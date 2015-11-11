@@ -1,5 +1,6 @@
 package se.skeppstedt.swimpy.application.parser;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.IOException;
@@ -30,18 +31,9 @@ public class OctoParser {
 	private String url;
 	private Document document;
 
-	public OctoParser(String swimmerUrl) {
-		this.url = swimmerUrl;
-	}
-
-	public Swimmer parseSwimmer(String octoId) {
-		Swimmer swimmer = null;
-		try {
-			document = Jsoup.parse(new URL(url + octoId), 6000);
-		} catch (IOException e) {
-			Log.e("OctoParser", "Could not parse swimmer url" + url, e);
-			return null;
-		}
+	public Swimmer parseSwimmer(Document document, String octoId) {
+		this.document = document;
+        Swimmer swimmer = null;
 		String name = extractSwimmerName();
 		String dateOfBirth = extractSwimmerYearOfBirth();
 		String swimmingClub = extractSwimmerClub();
@@ -90,7 +82,8 @@ public class OctoParser {
 		Elements odds = document.select("tr.odd");
 		Elements evens = document.select("tr.even");
 		odds.addAll(evens);
-		for (Element element : odds) {
+        Log.d("OctoParser","Extracting personal bests");
+        for (Element element : odds) {
 			String competition = extractCompetition(element);
 			String date = extractDate(element);
 			Duration time = extractTime(element);
@@ -98,6 +91,7 @@ public class OctoParser {
 			PersonalBest personalBest = new PersonalBest(event, time, competition, swimmer);
 			swimmer.personalBests.add(personalBest);
 		}
+        Log.d("OctoParser","Extracted " + swimmer.personalBests.size() + " personal bests");
 	}
 
 	private String extractLinkParameter(Element element, String parameterName) {
@@ -108,8 +102,15 @@ public class OctoParser {
 	private Duration extractTime(Element element) {
 		String timeString = element.select("td").get(3).ownText().replace('.', ':').trim();
 		String time = extractFromTextWithPattern(timeString, "\\d{2}:\\d{2}:\\d{2}");
-		String[] split = time.split(":");
-		return new Duration(Long.valueOf(split[0]) * 60000 + Long.valueOf(split[1]) * 1000 * Long.valueOf(split[2]) * 10);
+		String[] parts = time.split(":");
+        String minutes = parts[0];
+        String seconds = parts[1];
+        String millis = parts[2];
+        Long minutesValue = Long.valueOf(minutes) * 60000;
+        Long secondsValue = Long.valueOf(seconds) * 1000;
+        Long millisValue = Long.valueOf(millis) * 10;
+
+        return new Duration(Long.valueOf(minutesValue + secondsValue + millisValue));
 	}
 
 	private String extractDate(Element element) {
@@ -153,8 +154,8 @@ public class OctoParser {
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(text);
 		if(matcher.find()) {
-			return matcher.group();
-		}
+            return matcher.group();
+        }
 		return "Not found";
 		
 	}
@@ -164,5 +165,4 @@ public class OctoParser {
 		name = document.select("h2").text();
 		return name;
 	}
-
 }
