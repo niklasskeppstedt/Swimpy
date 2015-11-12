@@ -47,16 +47,14 @@ public class SwimmerApplication extends Application{
             FileReader fileReader = new FileReader(new File(getFilesDir(),"swimmers.dat"));
             BufferedReader br = new BufferedReader(fileReader);
             String s;
+            boolean empty = true;
             while((s = br.readLine()) != null) {
+                empty = false;
                 final String[] split = s.split(",");
                 swimmerIds = split;
-                if(swimmerIds.length == 2) {
-                    String[] fakeOnes = new String[4];
-                    System.arraycopy(swimmerIds,0,fakeOnes,0,2);
-                    fakeOnes[2] = "295557";
-                    fakeOnes[3] = "300057";
-                    swimmerIds = fakeOnes;
-                }
+            }
+            if(empty) {
+                swimmerIds = new String[]{"295557","301255","300057","297358"};
             }
             fileReader.close();
         } catch (FileNotFoundException e) {
@@ -67,10 +65,10 @@ public class SwimmerApplication extends Application{
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacksAdapter() {
             @Override
             public void onActivityStopped(Activity activity) {
-                if(activity instanceof MainActivity) {
+                if (activity instanceof MainActivity) {
                     FileWriter fileWriter = null;
                     try {
-                        if(!swimmers.isEmpty()) {
+                        if (!swimmers.isEmpty()) {
                             fileWriter = new FileWriter(new File(getFilesDir(), "swimmers.dat"));
                             //Write a new student object list to the CSV file
                             boolean comma = false;
