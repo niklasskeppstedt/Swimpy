@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Simmare"
+        android:text="Medium Text"
         android:id="@+id/swimmersText"
         android:layout_alignTop="@+id/mainSwimmerButton"
         android:layout_alignParentStart="true" />
@@ -60,6 +60,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Button"
-        android:id="@+id/medley50button" />
+        android:id="@+id/button" />
 
 </RelativeLayout>

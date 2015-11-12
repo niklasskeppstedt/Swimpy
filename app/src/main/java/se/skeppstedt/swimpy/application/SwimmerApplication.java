@@ -58,7 +58,7 @@ public class SwimmerApplication extends Application{
             }
             fileReader.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            swimmerIds = new String[]{"295557","301255","300057","297358"};
         } catch (IOException e) {
             e.printStackTrace();
         }
