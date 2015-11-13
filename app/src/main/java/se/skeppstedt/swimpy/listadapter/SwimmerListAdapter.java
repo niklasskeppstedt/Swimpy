@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 
 import java.util.List;
 
@@ -47,21 +48,22 @@ public class SwimmerListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        CheckBox v = (CheckBox)convertView;
+        LinearLayout v = (LinearLayout)convertView;
         if (v == null) {
             // Inflate the layout according to the view type
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = (CheckBox)inflater.inflate(R.layout.swimmerwithcheckbox, parent, false);
+            v = (LinearLayout)inflater.inflate(R.layout.swimmerwithcheckbox, parent, false);
         }
         //
         final Swimmer c = swimmers.get(position);
-        v.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        CompoundButton check = (CompoundButton) v.findViewById(R.id.swimmerCheckBox);
+        check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 listener.onChecked(c.octoId, isChecked);
             }
         });
-        v.setOnLongClickListener(new View.OnLongClickListener() {
+        check.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 listener.onLongClick(c.octoId);
@@ -75,7 +77,7 @@ public class SwimmerListAdapter extends BaseAdapter {
             gradient.mutate();
             v.setBackgroundDrawable(gradient);
         }
-        v.setText(c.name);
+        check.setText(c.name);
         return v;
     }
 

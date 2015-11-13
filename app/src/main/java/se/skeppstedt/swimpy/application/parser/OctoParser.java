@@ -31,6 +31,14 @@ public class OctoParser {
 	private String url;
 	private Document document;
 
+	public OctoParser() {
+
+	}
+
+	public OctoParser(String url) {
+		this.url = url;
+	}
+
 	public Swimmer parseSwimmer(Document document, String octoId) {
 		this.document = document;
         Swimmer swimmer = null;

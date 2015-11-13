@@ -32,34 +32,45 @@
         android:layout_below="@id/mainToolbarLayout"
         app:fabSize="normal" />
 
-    <TextView
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/mainSwimmerDeleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Simmare"
-        android:id="@+id/swimmersText"
+        android:src="@drawable/ic_remove"
+        android:layout_marginRight="20dp"
+        app:fabSize="normal"
+        android:layout_below="@+id/mainSwimmerButton"
+        android:layout_alignStart="@+id/mainSwimmerButton" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Välj alla"
+        android:id="@+id/selectAllCheckbox"
         android:layout_alignTop="@+id/mainSwimmerButton"
         android:layout_alignParentStart="true" />
+        android:id="@+id/selectAllCheckBox" />
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/swimmersList"
-        android:layout_below="@+id/swimmersText"
+        android:layout_below="@+id/selectAllCheckbox"
         android:layout_alignParentStart="true" />
 
-    <android.support.v4.widget.Space
-        android:layout_below="@+id/swimmersList"
+    <View
         android:id="@+id/mainSpace"
+        android:layout_below="@+id/swimmersList"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <Button
-        android:layout_below="@+id/mainSpace"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/medley50button" />
+        android:layout_height="wrap_content" android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_centerInParent="true"
+        android:id="@+id/medley50button"
+        android:text="Medley Teams"/>
 
 </RelativeLayout>

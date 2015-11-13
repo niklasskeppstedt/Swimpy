@@ -21,21 +21,13 @@ public class ShowBestMedleyTeams50Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_show_best_medley50_teams);
         Bundle bundle = getIntent().getExtras();
         List<String> selectedSwimmers = bundle.getStringArrayList("selectedswimmers");
         SwimmerApplication application = (SwimmerApplication) getApplication();
         List<Swimmer> swimmers = application.getSwimmers(selectedSwimmers);
-        setContentView(R.layout.activity_show_best_medley50_teams);
-        setUpSelectedSwimmers(swimmers);
-
         List<MedleyTeam> medleyTeams = application.getBestMedleyTeams(swimmers);
         setUpMedleyTeams(medleyTeams);
-    }
-
-    private void setUpSelectedSwimmers(List<Swimmer> swimmers) {
-        Log.d(getClass().getSimpleName(), "Setting up selected swimmer list with " + swimmers.size() + " swimmers");
-        ListView selectedSwimmersList = (ListView) findViewById(R.id.selectedSwimmersList);
-        selectedSwimmersList.setAdapter(new ArrayAdapter<Swimmer>(this, R.layout.swimmer, swimmers));
     }
 
     private void setUpMedleyTeams(List<MedleyTeam> teams) {

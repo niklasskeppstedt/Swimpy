@@ -33,6 +33,8 @@
         </activity>
         <activity android:name=".ShowBestMedleyTeams50Activity" >
         </activity>
+        <activity android:name=".SearchSwimmerActivity" >
+        </activity>
     </application>
 
 </manifest>
