@@ -16,13 +16,15 @@ public class PersonalBest {
     public Duration time;
     public Swimmer swimmer;
     public String date;
+    public boolean official = true;
 
-    public PersonalBest(Event event, Duration time, String competition, String date, Swimmer swimmer) {
+    public PersonalBest(Event event, Duration time, String competition, String date, Swimmer swimmer, boolean official) {
         this.event = event;
         this.time = time;
         this.competition = competition;
         this.swimmer = swimmer;
         this.date = date;
+        this.official = official;
     }
 
     @Override

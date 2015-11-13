@@ -153,7 +153,8 @@ public class SearchSwimmerActivity extends AppCompatActivity {
         protected List<Swimmer> doInBackground(String... octoIds) {
             Set<Swimmer> searchResult = new HashSet<>();
             SwimmerApplication application = (SwimmerApplication) getApplication();
-            return application.addSwimmer(octoIds[0]);
+            final List<Swimmer> swimmers = application.addSwimmer(octoIds[0]);
+            return swimmers;
         }
 
         @Override

@@ -17,7 +17,33 @@ public class Swimmer {
     public String club;
     public String yearOfBirth;
     public String octoId;
-    public Set<PersonalBest> personalBests = new HashSet<>();
+    private Set<PersonalBest> personalBests = new HashSet<>();
+
+    public void addPersonalBest(PersonalBest personalBest) {
+        personalBests.add(personalBest);
+    }
+
+    /**
+     * Replaces a personal best with a fresh personal best from today
+     * @param freshOne the fresh personal best
+     * @return true if it was replace false if the old one was better
+     */
+    public boolean addFreshPersonalBest(PersonalBest freshOne) {
+        Event event = freshOne.event;
+        PersonalBest toBeReplaced = null;
+        for (PersonalBest pb: personalBests) {
+            if(pb.event.equals(event)) {
+                toBeReplaced = pb;
+                break;
+            }
+        }
+        if(toBeReplaced != null && freshOne.time.getMillis() < toBeReplaced.time.getMillis()) {
+            personalBests.remove(toBeReplaced);
+            personalBests.add(freshOne);
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Gets the personal bests sorted on
@@ -64,5 +90,21 @@ public class Swimmer {
     @Override
     public String toString() {
         return name + "(" + club + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Swimmer swimmer = (Swimmer) o;
+
+        return octoId.equals(swimmer.octoId);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return octoId.hashCode();
     }
 }

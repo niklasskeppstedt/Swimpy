@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> selectedSwimmers = new ArrayList<>();
     private ArrayList<Swimmer> allSwimmers = new ArrayList<>();
     private SwimmerListAdapter swimmerListAdapter;
+    private ListView swimmersList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
 
-        final ListView swimmersList = (ListView) findViewById(R.id.swimmersList);
+        swimmersList = (ListView) findViewById(R.id.swimmersList);
         swimmersList.setAdapter(swimmerListAdapter = new SwimmerListAdapter(this, allSwimmers = new ArrayList<Swimmer>(getSwimmerApplication().swimmers)));
         swimmerListAdapter.setOnCheckBoxCheckedListener(new SwimmerListAdapterListener() {
             @Override
@@ -94,13 +95,26 @@ public class MainActivity extends AppCompatActivity {
         selectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                for(int i=0; i < swimmersList.getChildCount(); i++){
-                    View child = swimmersList.getChildAt(i);
-                    CheckBox cb = (CheckBox)child.findViewById(R.id.swimmerCheckBox);
-                    cb.setChecked(isChecked);
-                }
+                setAllCheckboxes(isChecked);
             }
         });
+    }
+
+    private void setAllCheckboxes(boolean isChecked) {
+        for(int i=0; i < swimmersList.getChildCount(); i++){
+            View child = swimmersList.getChildAt(i);
+            CheckBox cb = (CheckBox)child.findViewById(R.id.swimmerCheckBox);
+            cb.setChecked(isChecked);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        allSwimmers.clear();
+        allSwimmers.addAll(((SwimmerApplication) getApplication()).getSwimmers());
+        swimmerListAdapter.notifyDataSetChanged();
+        setAllCheckboxes(false);
     }
 
     @Override
@@ -144,8 +158,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Swimmer> swimmers) {
-            Log.d(getClass().getSimpleName(), "onPostExecute with " + swimmers.size() + " swimmers");
             super.onPostExecute(swimmers);
+            Log.d(getClass().getSimpleName(), "onPostExecute with " + swimmers.size() + " swimmers");
+            setAllCheckboxes(false);
             allSwimmers.clear();
             allSwimmers.addAll(swimmers);
             swimmerListAdapter.notifyDataSetChanged();

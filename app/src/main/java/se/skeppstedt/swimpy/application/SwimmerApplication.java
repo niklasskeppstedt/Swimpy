@@ -47,6 +47,10 @@ public class SwimmerApplication extends Application{
         return null;
     }
 
+    public Set<Swimmer> getSwimmers() {
+        return new HashSet<>(swimmers);
+    }
+
     @Override
     public void onCreate() {
         //initialDummyWrite()
