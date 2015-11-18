@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +31,6 @@ import se.skeppstedt.swimpy.listadapter.SwimmerListAdapter;
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<String> selectedSwimmers = new ArrayList<>();
-    private ArrayList<Swimmer> allSwimmers = new ArrayList<>();
     private SwimmerListAdapter swimmerListAdapter;
     private ListView swimmersList = null;
 
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         swimmersList = (ListView) findViewById(R.id.swimmersList);
-        swimmersList.setAdapter(swimmerListAdapter = new SwimmerListAdapter(this, allSwimmers = new ArrayList<Swimmer>(getSwimmerApplication().swimmers)));
+        swimmersList.setAdapter(swimmerListAdapter = new SwimmerListAdapter(this, getSwimmerApplication().getSwimmers()));
         swimmerListAdapter.setOnCheckBoxCheckedListener(new SwimmerListAdapterListener() {
             @Override
             public void onChecked(String octoId, boolean checked) {
@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d(getClass().getSimpleName(), "New swimmer button clicked");
                 Intent intent = new Intent(MainActivity.this, SearchSwimmerActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });
@@ -111,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        allSwimmers.clear();
-        allSwimmers.addAll(((SwimmerApplication) getApplication()).getSwimmers());
         swimmerListAdapter.notifyDataSetChanged();
         setAllCheckboxes(false);
     }
@@ -161,8 +161,6 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(swimmers);
             Log.d(getClass().getSimpleName(), "onPostExecute with " + swimmers.size() + " swimmers");
             setAllCheckboxes(false);
-            allSwimmers.clear();
-            allSwimmers.addAll(swimmers);
             swimmerListAdapter.notifyDataSetChanged();
         }
     }

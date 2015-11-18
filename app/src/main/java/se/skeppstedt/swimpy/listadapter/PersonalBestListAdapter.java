@@ -52,12 +52,18 @@ public class PersonalBestListAdapter extends BaseAdapter {
         }
         //
         PersonalBest c = personalBestList.get(position);
-        if ( position % 2 == 0 ) {
-            v.setBackgroundDrawable(null);
-        } else {
-            Drawable gradient = ctx.getResources().getDrawable(R.drawable.table_line_selector);
+        if(!c.official) {
+            Drawable gradient = ctx.getResources().getDrawable(R.drawable.table_line_selector_fresh);
             gradient.mutate();
             v.setBackgroundDrawable(gradient);
+        } else {
+            if (position % 2 == 0) {
+                v.setBackgroundDrawable(null);
+            } else {
+                Drawable gradient = ctx.getResources().getDrawable(R.drawable.table_line_selector);
+                gradient.mutate();
+                v.setBackgroundDrawable(gradient);
+            }
         }
         TextView event = (TextView) v.findViewById(R.id.personalBestEvent);
         TextView time = (TextView) v.findViewById(R.id.personalBestTime);

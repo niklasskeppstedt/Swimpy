@@ -50,14 +50,27 @@
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Personbästa:"
-            android:id="@+id/textView2"
-            android:background="@drawable/header_selector"
-            android:gravity="center" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Personbästa:"
+                android:id="@+id/textView2"
+                android:background="@drawable/header_selector"
+                android:gravity="center" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add"
+                android:id="@+id/addPersonalBestButton"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
 
         <ListView
             android:layout_width="wrap_content"
@@ -65,4 +78,5 @@
             android:id="@+id/personalBestList" />
 
     </LinearLayout>
+
 </RelativeLayout>

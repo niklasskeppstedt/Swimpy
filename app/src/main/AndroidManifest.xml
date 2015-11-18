@@ -35,6 +35,8 @@
         </activity>
         <activity android:name=".SearchSwimmerActivity" >
         </activity>
+        <activity android:name=".AddPersonalBestActivity" >
+        </activity>
     </application>
 
 </manifest>

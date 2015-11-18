@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -35,8 +36,8 @@ import se.skeppstedt.swimpy.util.PersonalBestComparator;
  */
 public class SwimmerApplication extends Application{
 
-    public Set<Swimmer> swimmers = new HashSet<>();
-    public String[] swimmerIds = new String[]{};
+    private List<Swimmer> swimmers = new ArrayList<>();
+    public List<String> swimmerIds = new ArrayList<>();
 
     public Swimmer getSwimmer(String octoid) {
         for (Swimmer swimmer: swimmers) {
@@ -47,8 +48,8 @@ public class SwimmerApplication extends Application{
         return null;
     }
 
-    public Set<Swimmer> getSwimmers() {
-        return new HashSet<>(swimmers);
+    public List<Swimmer> getSwimmers() {
+        return swimmers;
     }
 
     @Override
@@ -71,7 +72,7 @@ public class SwimmerApplication extends Application{
             while((s = br.readLine()) != null) {
                 Log.i("Swimpy", "Swimpy read line, it is " + s);
                 final String[] split = s.split(",");
-                swimmerIds = split;
+                swimmerIds = Arrays.asList(split);
             }
             fileReader.close();
         } catch (FileNotFoundException e) {
@@ -83,35 +84,46 @@ public class SwimmerApplication extends Application{
             @Override
             public void onActivityStopped(Activity activity) {
                 if (activity instanceof MainActivity) {
-                    FileWriter fileWriter = null;
-                    try {
-                        if (!swimmers.isEmpty()) {
-                            fileWriter = new FileWriter(new File(getFilesDir(), "swimmers.dat"));
-                            //Write a new swimmer object list to the CSV file
-                            boolean comma = false;
-                            for (Swimmer student : swimmers) {
-                                if (comma) {
-                                    fileWriter.append(",");
-                                }
-                                fileWriter.append(String.valueOf(student.octoId));
-                                comma = true;
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        try {
-                            if(fileWriter != null) {
-                                fileWriter.flush();
-                                fileWriter.close();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    saveState();
+                }
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+                if (activity instanceof MainActivity) {
+                    saveState();
                 }
             }
         });
+    }
+
+    private void saveState() {
+        FileWriter fileWriter = null;
+        try {
+            if (!swimmers.isEmpty()) {
+                fileWriter = new FileWriter(new File(getFilesDir(), "swimmers.dat"));
+                //Write a new swimmer object list to the CSV file
+                boolean comma = false;
+                for (Swimmer student : swimmers) {
+                    if (comma) {
+                        fileWriter.append(",");
+                    }
+                    fileWriter.append(String.valueOf(student.octoId));
+                    comma = true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(fileWriter != null) {
+                    fileWriter.flush();
+                    fileWriter.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public List<Swimmer> getSwimmers(List<String> swimmerIds) {
@@ -141,7 +153,7 @@ public class SwimmerApplication extends Application{
         OctoParser octoParser = new OctoParser();
         Swimmer swimmer = octoParser.parseSwimmer(document, octoid);
         swimmers.add(swimmer);
-        return new ArrayList<>(swimmers); //Well maybe not the good thing to do...
+        return swimmers; //Well maybe not the good thing to do...
     }
 
     public List<MedleyTeam> getBestMedleyTeams(List<Swimmer> swimmers) {
@@ -198,6 +210,7 @@ public class SwimmerApplication extends Application{
     }
 
     public List<Swimmer> deleteSwimmers(String[] octoIds) {
+        Log.d(getClass().getSimpleName(), "Deleting " + octoIds.length + " swimmer(s), Current size is " + swimmers.size());
         List<Swimmer> swimmersToRemove = new ArrayList<>();
         for (String octoId : octoIds) {
             for (Swimmer swimmer : swimmers) {
@@ -207,6 +220,7 @@ public class SwimmerApplication extends Application{
             }
         }
         swimmers.removeAll(swimmersToRemove);
-        return new ArrayList<>(swimmers);
+        Log.d(getClass().getSimpleName(), "Removed " + swimmersToRemove + " swimmer(s), Current size is " + swimmers.size());
+        return swimmers;
     }
 }

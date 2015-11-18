@@ -41,8 +41,11 @@ public class Swimmer {
             personalBests.remove(toBeReplaced);
             personalBests.add(freshOne);
             return true;
+        } else if (toBeReplaced == null){ //There was no previous result, just add it
+            personalBests.add(freshOne);
+            return true;
         }
-        return false;
+        return false; //The old result was not replaced
     }
 
     /**
