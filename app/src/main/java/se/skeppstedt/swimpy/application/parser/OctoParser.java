@@ -67,6 +67,7 @@ public class OctoParser {
 			document = Jsoup.parse(new URL(url), 3000);
 		} catch (IOException e) {
 			System.err.println("Could not parse swimmer url");
+			return Collections.emptySet();
 		}
 		Set<Swimmer> swimmers = new HashSet<>();
 		Elements odd = document.select("tr.odd");

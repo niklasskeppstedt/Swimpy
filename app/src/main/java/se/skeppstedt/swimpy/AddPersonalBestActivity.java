@@ -8,9 +8,11 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -45,75 +47,49 @@ public class AddPersonalBestActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
-        final EditText minutesText = (EditText) findViewById(R.id.addPersonalBestMinutes);
-        minutesText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+        SwimmerApplication application = (SwimmerApplication) getApplication();
+        final Swimmer swimmer = application.getSwimmer(octoId);
+        final NumberPicker minutesPicker = (NumberPicker) findViewById(R.id.addPersonalBestMinutes);
+        minutesPicker.setMinValue(0);
+        minutesPicker.setMaxValue(20);
+        final NumberPicker secondsPicker = (NumberPicker) findViewById(R.id.addPersonalBestSeconds);
+        secondsPicker.setMinValue(0);
+        secondsPicker.setMaxValue(59);
+        final NumberPicker millisPicker = (NumberPicker) findViewById(R.id.addPersonalBestMillis);
+        millisPicker.setMinValue(0);
+        millisPicker.setMaxValue(99);
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                Log.d(getClass().getSimpleName(), "Changed text to " + s.toString());
-                if (!s.toString().isEmpty() && Integer.parseInt(s.toString()) > 12) {//Unreasonably long one
-                    Toast.makeText(AddPersonalBestActivity.this, "Really " + s.toString() + " minutes?", Toast.LENGTH_SHORT).show();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                final Event selectedEvent = (Event) spinner.getSelectedItem();
+                final PersonalBest personalBest = swimmer.getPersonalBest(selectedEvent);
+                if(personalBest != null) {
+                    Duration time = personalBest.time;
+                    final int minutes = time.toStandardMinutes().getMinutes();
+                    final int seconds = time.toStandardSeconds().getSeconds();
+                    minutesPicker.setValue(minutes);
+                    secondsPicker.setValue(seconds);
+                    long millisWithoutMinSec = (time.getMillis() - (minutes * 60000L) - (seconds * 1000L));
+                    Log.d(getClass().getSimpleName(), "Millis without minutes and seconds " + millisWithoutMinSec);
+                    long millis = millisWithoutMinSec / 10L;
+                    millisPicker.setValue((int)millis);
                 }
-                validate();
-
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
-        final EditText secondsText = (EditText) findViewById(R.id.addPersonalBestSeconds);
-        secondsText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                Log.d(getClass().getSimpleName(), "Changed text to " + s.toString());
-                if (!s.toString().isEmpty() && Integer.parseInt(s.toString()) > 59) {//Unreasonably long one
-                    Toast.makeText(AddPersonalBestActivity.this, "Really " + s.toString() + " seconds?", Toast.LENGTH_SHORT).show();
-                }
-                validate();
-            }
-        });
-        final EditText millisText = (EditText) findViewById(R.id.addPersonalBestMillis);
-        millisText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                Log.d(getClass().getSimpleName(), "Changed text to " + s.toString());
-                if (!s.toString().isEmpty() && Integer.parseInt(s.toString()) > 99) {//Unreasonably long one
-                    Toast.makeText(AddPersonalBestActivity.this, "Really " + s.toString() + " hundreds?", Toast.LENGTH_SHORT).show();
-                }
-                validate();
-            }
-        });
         Button saveButton = (Button) findViewById(R.id.savePersonalBestButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Event event = (Event) spinner.getSelectedItem();
-                SwimmerApplication application = (SwimmerApplication) getApplication();
-                Swimmer swimmer = application.getSwimmer(octoId);
-                Log.d(getClass().getSimpleName(), "Trying to parse m:" + minutesText.toString().trim() + " s:" + secondsText.toString().trim() + " h:" + millisText.toString().trim());
-                Long minutesValue = Long.valueOf(minutesText.getEditableText().toString().trim()) * 60000;
-                Long secondsValue = Long.valueOf(secondsText.getEditableText().toString().trim()) * 1000;
-                Long millisValue = Long.valueOf(millisText.getEditableText().toString().trim()) * 10;
+                Log.d(getClass().getSimpleName(), "Trying to parse m:" + minutesPicker.getValue() + " s:" + secondsPicker.getValue() + " h:" + millisPicker.getValue());
+                Long minutesValue = minutesPicker.getValue() * 60000L;
+                Long secondsValue = secondsPicker.getValue() * 1000L;
+                Long millisValue = millisPicker.getValue() * 10L;
                 Duration time = new Duration(Long.valueOf(minutesValue + secondsValue + millisValue));
                 android.text.format.DateFormat.format("yyyy-MM-dd", new java.util.Date());
                 final PersonalBest today = new PersonalBest(event, time, "Today", android.text.format.DateFormat.format("yyyy-MM-dd", new java.util.Date()).toString(), swimmer, false);
@@ -129,6 +105,7 @@ public class AddPersonalBestActivity extends AppCompatActivity {
     }
 
     private void validate() {
+        /*
         final EditText minutesText = (EditText) findViewById(R.id.addPersonalBestMinutes);
         final EditText secondsText = (EditText) findViewById(R.id.addPersonalBestSeconds);
         final EditText millisText = (EditText) findViewById(R.id.addPersonalBestMillis);
@@ -143,6 +120,6 @@ public class AddPersonalBestActivity extends AppCompatActivity {
         }
         Log.d(getClass().getSimpleName(), "Disabling button");
         saveButton.setEnabled(false);
-
+        */
     }
 }
