@@ -42,7 +42,8 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:id="@+id/medleyBackstrokeLine">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -76,7 +77,8 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:id="@+id/medleyButterflyLine">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -110,7 +112,8 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:id="@+id/medleyBreaststrokeLine">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -144,7 +147,8 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:id="@+id/medleyFreestyleLine">
 
                 <TextView
                     android:layout_width="wrap_content"

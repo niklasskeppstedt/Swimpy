@@ -56,13 +56,6 @@ public class MedleyTeamListAdapter extends BaseAdapter {
         //}
         //
         MedleyTeam team = medleyTeams.get(position);
-        if ( position % 2 == 0 ) {
-            v.setBackgroundDrawable(null);
-        } else {
-            Drawable gradient = ctx.getResources().getDrawable(R.drawable.table_line_selector);
-            gradient.mutate();
-            v.setBackgroundDrawable(gradient);
-        }
         TextView time = (TextView) v.findViewById(R.id.teamTime);
         time.setText(DurationUtil.getTimeString(team.getTime()));
 
@@ -75,7 +68,11 @@ public class MedleyTeamListAdapter extends BaseAdapter {
         TextView relayTime = (TextView) v.findViewById(R.id.relayBackstrokeTime);
         relayTime.setText(DurationUtil.getTimeString(relay.time));
         if(backStrokeIsFresh) {
-            relayTime.setBackgroundColor(Color.CYAN);
+            final View medleyBackstrokeLine = v.findViewById(R.id.medleyBackstrokeLine);
+            Drawable gradient = ctx.getResources().getDrawable(R.drawable.table_line_selector_fresh);
+            gradient.mutate();
+            medleyBackstrokeLine.setBackgroundDrawable(gradient);
+            //relayTime.setBackgroundColor(Color.CYAN);
         }
 
         relay = team.relays.get(1);
@@ -87,7 +84,11 @@ public class MedleyTeamListAdapter extends BaseAdapter {
         relayTime = (TextView) v.findViewById(R.id.relayButterflyTime);
         relayTime.setText(DurationUtil.getTimeString(relay.time));
         if(butterflyIsfresh) {
-            relayTime.setBackgroundColor(Color.CYAN);
+            final View medleyButterflyLine = v.findViewById(R.id.medleyButterflyLine);
+            Drawable gradient = ctx.getResources().getDrawable(R.drawable.table_line_selector_fresh);
+            gradient.mutate();
+            medleyButterflyLine.setBackgroundDrawable(gradient);
+            //relayTime.setBackgroundColor(Color.CYAN);
         }
 
         relay = team.relays.get(2);
@@ -99,7 +100,11 @@ public class MedleyTeamListAdapter extends BaseAdapter {
         relayTime = (TextView) v.findViewById(R.id.relayBreaststrokeTime);
         relayTime.setText(DurationUtil.getTimeString(relay.time));
         if(breaststrokeIsFresh) {
-            relayTime.setBackgroundColor(Color.CYAN);
+            final View medleyBreaststrokeLine = v.findViewById(R.id.medleyBreaststrokeLine);
+            Drawable gradient = ctx.getResources().getDrawable(R.drawable.table_line_selector_fresh);
+            gradient.mutate();
+            medleyBreaststrokeLine.setBackgroundDrawable(gradient);
+            //relayTime.setBackgroundColor(Color.CYAN);
         }
 
         relay = team.relays.get(3);
@@ -111,7 +116,11 @@ public class MedleyTeamListAdapter extends BaseAdapter {
         relayTime = (TextView) v.findViewById(R.id.relayFreestyleTime);
         relayTime.setText(DurationUtil.getTimeString(relay.time));
         if(freeStyleIsFresh) {
-            relayTime.setBackgroundColor(Color.CYAN);
+            final View medleyFreestyleLine = v.findViewById(R.id.medleyFreestyleLine);
+            Drawable gradient = ctx.getResources().getDrawable(R.drawable.table_line_selector_fresh);
+            gradient.mutate();
+            medleyFreestyleLine.setBackgroundDrawable(gradient);
+            //relayTime.setBackgroundColor(Color.CYAN);
         }
 
         return v;
